@@ -1,0 +1,53 @@
+---
+title: "Global sea ice area evolution"
+author: "Flor Allaert"
+date: "14 Feb 2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Data Source
+
+The following plots show the evolution of the total area of sea ice from 1978 till now and are based on data from http://nsidc.org/data
+
+## Northern hemisphere
+
+```{r, warning=FALSE,message=FALSE}
+library(plotly)
+#library(plyr)
+
+# Read the data
+df_north <- read.csv("Daily_sea_ice_north.csv")[-1,1:5]
+df_north$Extent <- as.numeric(as.character(df_north$Extent))
+df_south <- read.csv("Daily_sea_ice_south.csv")[-1,1:5]
+df_south$Extent <- as.numeric(as.character(df_south$Extent))
+
+tmp <- paste( df_north$Month , df_north$Day , sep = "." )
+tmp2 <- paste(df_north$Year,tmp,sep=".")
+df_north$Date <- as.Date(tmp2, format="%Y.%m.%d")
+
+x <- list(title = "Time")
+y <- list(title = "Sea Ice Area (10^6 km^2)")
+
+p <- plot_ly(x=df_north$Date, y=df_north$Extent, mode="line", type="scatter") %>%
+    layout(xaxis=x, yaxis=y)
+p
+```
+
+## Southern hemisphere
+
+```{r, warning=FALSE,message=FALSE}
+tmp <- paste( df_south$Month , df_south$Day , sep = "." )
+tmp2 <- paste(df_south$Year,tmp,sep=".")
+df_south$Date <- as.Date(tmp2, format="%Y.%m.%d")
+
+x <- list(title = "Time")
+y <- list(title = "Sea Ice Area (10^6 km^2)")
+
+p <- plot_ly(x=df_south$Date, y=df_south$Extent, mode="line", type="scatter") %>%
+    layout(xaxis=x, yaxis=y)
+p
+```
